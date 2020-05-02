@@ -34,8 +34,18 @@ namespace ray_tracing
         public float Length() => _vector.Length();
         public float Length_squared() => _vector.LengthSquared();
 
-        public static Vec3 Unit_vector(Vec3 v) => v/v.Length();
+        public static Vec3 Unit_vector(Vec3 v) => v / v.Length();
 
+        public static float Dot(Vec3 a, Vec3 b) => a.X * b.X + a.Y * b.Y + a.Z * b.Z;
+
+        public static Vec3 Cross(Vec3 u, Vec3 v)
+        {
+            return new Vec3(
+                u.Y * v.Z - u.Z * v.Y,
+                u.Z * v.X - u.X * v.Z,
+                u.X * v.X - u.Y * u.X
+            );
+        }
         public static Vec3 operator *(float t, Vec3 vector)
         {
             return new Vec3(t * vector.X, t * vector.Y, t * vector.Z);
@@ -47,7 +57,11 @@ namespace ray_tracing
 
         public static Vec3 operator /(Vec3 a, float t)
         {
-            return (1/t) * a;
+            return (1 / t) * a;
+        }
+        public static Vec3 operator -(Vec3 a, Vec3 b)
+        {
+            return new Vec3(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
         }
     }
 }
