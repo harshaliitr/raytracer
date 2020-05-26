@@ -29,24 +29,31 @@ namespace ray_tracing
 
         private Vec3 Ray_color(Ray r)
         {
-            if (Hit_sphere(new Vec3(0.0F, 0.0F, -1.0F), 0.5F, r))
-                return new Vec3(1.0F, 0.0F, 0.0F);
-
+            var t = Hit_sphere(new Vec3(0.0F, 0.0F, -1.0F), 0.5F, r);
+            if (t > 0.0)
+            {
+                Vec3 N = Vec3.Unit_vector(r.At(t) - new Vec3(0.0F, 0.0F, -1.0F));
+                return 0.5F * new Vec3(N.X + 1, N.Y + 1, N.Z + 1);
+            }
             var v1 = new Vec3(1.0F, 1.0F, 1.0F);
             var v2 = new Vec3(0.5F, 0.7F, 1.0F);
             Vec3 unit_direction = Vec3.Unit_vector(r.Direction());
-            var t = 0.5F * (unit_direction.Y + 1.0F);
+            t = 0.5F * (unit_direction.Y + 1.0F);
             return (1 - t) * v1 + t * v2;
         }
 
-        bool Hit_sphere(Vec3 center, float radius, Ray r)
+        float Hit_sphere(Vec3 center, float radius, Ray r)
         {
             Vec3 oc = r.Origin() - center;
             var a = Vec3.Dot(r.Direction(), r.Direction());
             var b = 2.0F * Vec3.Dot(oc, r.Direction());
             var c = Vec3.Dot(oc, oc) - radius * radius;
             var discriminant = b * b - 4 * a * c;
-            return (discriminant > 0);
+
+            if (discriminant < 0)
+                return -1.0f;
+            else
+                return (float)((-b - Math.Sqrt(discriminant)) / (2.0 * a));
         }
     }
 }
